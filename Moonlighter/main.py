@@ -37,19 +37,19 @@ class character:
 
     def draw(self):
         if self.turn == 0:
-            self.image.clip_draw(self.frame * 89, self.dir, 100, 100, self.x, self.y)
+            self.image.clip_draw(self.frame * 89, self.dir, 100, 100, self.x, self.y, 80, 100)
         elif self.turn == 1:
-            self.attack.clip_draw(self.a_frame * 136, 0, 100, 100, self.x, self.y, 65, 100)
-            self.weapon.clip_draw(self.w_frame * 136, 0, 100, 100, self.x, self.y, 65, 80)
+            self.attack.clip_draw(self.a_frame * 136, 0, 120, 100, self.x, self.y, 65, 100)
+            self.weapon.clip_draw(self.w_frame * 136, 0, 120, 100, self.x, self.y, 65, 100)
         elif self.turn == 2:
-            self.attack.clip_draw(self.a_frame * 136, 100, 100, 100, self.x, self.y, 65, 100)
-            self.weapon.clip_draw(self.w_frame * 136, 100, 100, 100, self.x, self.y, 65, 80)
+            self.attack.clip_draw(self.a_frame * 136, 100, 120, 100, self.x, self.y, 65, 100)
+            self.weapon.clip_draw(self.w_frame * 136, 100, 120, 100, self.x, self.y, 65, 100)
         elif self.turn == 3:
-            self.attack.clip_draw(self.a_frame * 136, 200, 100, 100, self.x, self.y, 65, 100)
-            self.weapon.clip_draw(self.w_frame * 136, 200, 100, 100, self.x, self.y, 65, 80)
+            self.attack.clip_draw(self.a_frame * 136, 200, 120, 100, self.x, self.y, 65, 100)
+            self.weapon.clip_draw(self.w_frame * 136, 200, 120, 100, self.x, self.y, 65, 100)
         elif self.turn == 4:
-            self.attack.clip_draw(self.a_frame * 136, 300, 100, 100, self.x, self.y, 65, 100)
-            self.weapon.clip_draw(self.w_frame * 136, 300, 100, 100, self.x, self.y, 65, 80)
+            self.attack.clip_draw(self.a_frame * 136, 300, 120, 100, self.x, self.y, 65, 100)
+            self.weapon.clip_draw(self.w_frame * 136, 300, 120, 100, self.x, self.y, 65, 100)
 
     # def attackdraw(self):
     #     self.attack.clip_draw(self.a_frame * 133, self.dir, 100, 100, self.x, self.y)
@@ -62,7 +62,7 @@ class character:
             if event.type == SDL_QUIT:
                 running = False
             elif event.type == SDL_KEYDOWN and event.type == SDL_KEYDOWN:
-                if event.key == SDLK_RIGHT:
+                if event.key == SDLK_d:
                     if self.m_check == True:
                         self.dir = 0
                         self.x_dir += 2
@@ -70,15 +70,15 @@ class character:
                             self.m_check = False
                     elif self.m_check == False:
                         self.x = 180
-                if event.key == SDLK_LEFT:
+                if event.key == SDLK_a:
                     self.dir = 200
                     self.x_dir -= 2
                     self.turn = 0
-                if event.key == SDLK_UP:
+                if event.key == SDLK_w:
                     self.dir = 300
                     self.y_dir += 2
                     self.turn = 0
-                if event.key == SDLK_DOWN:
+                if event.key == SDLK_s:
                     self.dir = 100
                     self.y_dir -= 2
                     self.turn = 0
@@ -94,16 +94,16 @@ class character:
 
 
             elif event.type == SDL_KEYUP:
-                if event.key == SDLK_RIGHT:
+                if event.key == SDLK_d:
                     self.x_dir -= 2
                     self.turn = 0
-                if event.key == SDLK_LEFT:
+                if event.key == SDLK_a:
                     self.x_dir += 2
                     self.turn = 0
-                if event.key == SDLK_UP:
+                if event.key == SDLK_w:
                     self.y_dir -= 2
                     self.turn = 0
-                if event.key == SDLK_DOWN:
+                if event.key == SDLK_s:
                     self.y_dir += 2
                     self.turn = 0
                 if event.key == SDLK_j:
@@ -172,5 +172,5 @@ while running:
     for monsters in lowmonster:
         monsters.draw()
 
-    delay(0.03)
+    delay(0.05)
     update_canvas()
