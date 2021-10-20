@@ -112,8 +112,19 @@ class character:
 class BossMonster:
     def __init__(self):
         self.image = load_image('Boss.png')
+        self.x, self.y = 800, 400
+        self.check = True
     def draw(self):
-        self.image.draw(900, 400)
+        self.image.draw(self.x, self.y)
+    def update(self):
+        if self.check == True:
+            if self.y >= 180:
+                self.y -= 1
+                if self.y <= 180: self.check = False
+        if self.check == False:
+            if self.y <= 700:
+                self.y += 1
+                if self.y >= 700: self.check = True
 
 class Monster1:
     def __init__(self):
@@ -150,6 +161,7 @@ while running:
     player.update()
     for monsters in lowmonster:
         monsters.update()
+    boss.update()
     clear_canvas()
     back.draw()
     player.draw()
