@@ -1,6 +1,13 @@
-from pico2d import *
 import random
+import json
+import os
 
+from pico2d import *
+
+import game_framework
+import start_page
+
+name = "_main"
 
 
 class background:
@@ -139,27 +146,35 @@ class Monster1:
                 if self.x >= 1100: self.check = True
 
 
-open_canvas(1280,720)
-back = background()
-player = character()
-plyerattack = character()
-boss = BossMonster()
-lowmonster = [Monster1() for i in range(5)]
-running = True
+def enter():
+    pass
 
-while running:
+def exit():
+    pass
 
-    player.handle_events()
-    player.update()
-    for monsters in lowmonster:
-        monsters.update()
-    boss.update()
-    clear_canvas()
-    back.draw()
-    player.draw()
-    # player.attack()
-    boss.draw()
-    for monsters in lowmonster:
-        monsters.draw()
-    delay(0.01)
-    update_canvas()
+
+def pause():
+    pass
+
+
+def resume():
+    pass
+
+#
+# def handle_events():
+#     pass
+
+
+def update():
+    pass
+
+
+
+def draw():
+    pass
+
+
+
+
+
+
