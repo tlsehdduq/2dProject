@@ -62,6 +62,7 @@ class character:
                     self.dir = 0
                     self.x_dir += 2
                     self.turn = 0
+
                 if event.key == SDLK_a:
                     self.dir = 200
                     self.x_dir -= 2
@@ -89,6 +90,7 @@ class character:
                 if event.key == SDLK_d:
                     self.x_dir -= 2
                     self.turn = 0
+
                 if event.key == SDLK_a:
                     self.x_dir += 2
                     self.turn = 0

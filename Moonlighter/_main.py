@@ -57,7 +57,6 @@ class character:
             self.attack.clip_draw(self.a_frame * 136, 300, 120, 100, self.x, self.y, 65, 100)
             self.weapon.clip_draw(self.w_frame * 136, 300, 120, 100, self.x, self.y, 65, 100)
 
-
     def handle_events(self):
         global running
         events = get_events()
@@ -145,7 +144,15 @@ class Monster1:
                 self.x += 10
                 if self.x >= 1100: self.check = True
 
-
+def handle_events():
+    events = get_events()
+    for event in events:
+        if event.type == SDL_QUIT:
+            game_framework.quit()
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
+                game_framework.quit()
+        else:
+            character.handle_events(character)
 def enter():
     pass
 
