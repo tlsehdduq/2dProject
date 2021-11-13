@@ -1,8 +1,9 @@
 import game_framework
 from pico2d import *
 import _main
+import Moonlighter
 
-from _main import character
+from _main import Player
 
 name = "TitleState"
 image = None
@@ -27,7 +28,7 @@ def handle_events():
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                 game_framework.quit()
             elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
-                character.handle_events(event)
+                Player.handle_events(event)
 
 
 def draw():

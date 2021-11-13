@@ -1,154 +1,129 @@
+import game_framework
 from pico2d import *
+import game_world
 
-#character event
-RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, DOWN_DOWN, UP_DOWN, DOWN_UP, UP_UP, ATTACK =range(9)
+PIXEL_PER_METER = (10.0 / 0.3)
+RUN_SPEED_KMPH = 20.0
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 10
+
+RIGHT_DOWN, LEFT_DOWN, UP_DOWN, DOWN_DOWN, RIGHT_UP, LEFT_UP, UP_UP, DOWN_UP = range(8)
 
 key_event_table = {
-    (SDL_KEYDOWN,SDLK_w):UP_DOWN,
-    (SDL_KEYDOWN,SDLK_s):DOWN_DOWN,
-    (SDL_KEYDOWN, SDLK_a): LEFT_DOWN,
-    (SDL_KEYDOWN, SDLK_d): RIGHT_DOWN,
-    (SDL_KEYUP, SDLK_w): UP_UP,
-    (SDL_KEYUP, SDLK_s): DOWN_UP,
-    (SDL_KEYUP, SDLK_a): LEFT_UP,
-    (SDL_KEYUP, SDLK_d): RIGHT_UP,
-    (SDL_KEYDOWN, SDLK_j): ATTACK
+    (SDL_KEYDOWN, SDLK_RIGHT): RIGHT_DOWN,
+    (SDL_KEYDOWN, SDLK_LEFT): LEFT_DOWN,
+    (SDL_KEYDOWN, SDLK_UP): UP_DOWN,
+    (SDL_KEYDOWN, SDLK_DOWN): DOWN_DOWN,
+
+    (SDL_KEYUP, SDLK_RIGHT): RIGHT_UP,
+    (SDL_KEYUP, SDLK_LEFT): LEFT_UP,
+    (SDL_KEYUP, SDLK_UP): UP_UP,
+    (SDL_KEYUP, SDLK_DOWN): DOWN_UP,
 }
 
 
-class character:
-    def __init__(self):
-        self.image = load_image('character.png')
+class IdleState:
+    def enter(Player, event):
+        if event == RIGHT_DOWN:
+            Player.velocity += RUN_SPEED_PPS
+            Player.height = 3
+        elif event == LEFT_DOWN:
+            Player.veloctiy -= RUN_SPEED_PPS
+            Player.height = 2
+        elif event == UP_DOWN:
+            Player.veloctiy_y += RUN_SPEED_PPS
+            Player.height = 0
+        elif event == DOWN_DOWN:
+            Player.veloctiy_y -= RUN_SPEED_PPS
+            Player.height = 1
 
+    def exit(Player, event):
+        pass
+
+    def do(Player):
+        Player.frame = (Player.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
+
+    def draw(Player):
+        if Player.velocity == 0 and Player.velocity_y == 0:
+            Player.image.clip_draw(int(Player.frame) * 35, 35, 100, 100, Player.x, Player.y)
+        else:
+            Player.image.clip_draw(int(Player.frame) * 35, 35 * Player.height, 100, 100, Player.x, Player.y)
+
+
+class Runstate:
+
+    def enter(Player, event):
+        if event == RIGHT_DOWN:
+            Player.velocity += RUN_SPEED_PPS
+            Player.height = 3
+        elif event == LEFT_DOWN:
+            Player.velocity -= RUN_SPEED_PPS
+            Player.height = 2
+        elif event == UP_DOWN:
+            Player.velocity_y += RUN_SPEED_PPS
+            Player.height = 0
+        elif event == DOWN_DOWN:
+            Player.velocity_y -= RUN_SPEED_PPS
+            Player.height = 1
+        Player.dir = clamp(-1, Player.velocity, 1)
+
+    def exit(Player, event):
+        pass
+
+    def do(Player):
+        Player.frame = (Player.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
+        Player.x += Player.velocity * game_framework.frame_time
+        Player.x = clamp(25, Player.x, 500)
+
+    def draw(Player):
+        if Player.velocity == 0 and Player.velocity_y == 0:
+            Player.image.clip_draw(int(Player.frame) * 35, 35, 100, 100, Player.x, Player.y)
+        else:
+            Player.image.clip_draw(int(Player.frame) * 35, 35 * Player.height, 100, 100, Player.x, Player.y)
+
+
+class Player:
+    def __init__(self):
+        self.image = load_image('Player.png')
+        self.x, self.y = 200, 300
+        self.frame = 0
+        self.dir = 1
+        self.velocity = 0
+        self.velocity_y = 0
         self.event_que = []
         self.cur_state = IdleState
+        self.height = 0
         self.cur_state.enter(self, None)
-
-        self.x, self.y = 200,300
-        self.frame = 0
-        self.a_frame = 0
-        self.w_frame = 0
-        self.dir = 0
-        self.m_check = True
-        self.x_dir = 0
-        self.y_dir = 0
-        self.turn = 0
-
-    def change_state(self, state):
-        # fill here
-        pass
 
     def add_event(self, event):
         self.event_que.insert(0, event)
 
     def update(self):
-        self.cur_state.enter(self)
+        self.cur_state.do(self)
         if len(self.event_que) > 0:
-            event = self.event_que.pop()
             event = self.event_que.pop()
             self.cur_state.exit(self, event)
             self.cur_state = next_state_table[self.cur_state][event]
             self.cur_state.enter(self, event)
 
-
     def draw(self):
         self.cur_state.draw(self)
-        # if self.turn == 0:
-        #     self.image.clip_draw(self.frame * 89, self.dir, 100, 100, self.x, self.y, 80, 100)
-        # elif self.turn == 1:
-        #     self.attack.clip_draw(self.a_frame * 136, 0, 120, 100, self.x, self.y, 65, 100)
-        #     self.weapon.clip_draw(self.w_frame * 136, 0, 120, 100, self.x, self.y, 65, 100)
-        # elif self.turn == 2:
-        #     self.attack.clip_draw(self.a_frame * 136, 100, 120, 100, self.x, self.y, 65, 100)
-        #     self.weapon.clip_draw(self.w_frame * 136, 100, 120, 100, self.x, self.y, 65, 100)
-        # elif self.turn == 3:
-        #     self.attack.clip_draw(self.a_frame * 136, 200, 120, 100, self.x, self.y, 65, 100)
-        #     self.weapon.clip_draw(self.w_frame * 136, 200, 120, 100, self.x, self.y, 65, 100)
-        # elif self.turn == 4:
-        #     self.attack.clip_draw(self.a_frame * 136, 300, 120, 100, self.x, self.y, 65, 100)
-        #     self.weapon.clip_draw(self.w_frame * 136, 300, 120, 100, self.x, self.y, 65, 100)
 
-    def handle_event(self,event):
+    def handle_event(self, event):
         if (event.type, event.key) in key_event_table:
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
 
-class IdleState:
-    def enter(character, event):
-        if event == RIGHT_DOWN:
-            character.x_dir += 2
-            character.dir = 0
-        elif event == LEFT_DOWN:
-            character.x_dir -= 2
-            character.dir = 200
-        elif event == UP_DOWN:
-            character.y_dir += 2
-            character.dir = 300
-        elif event == DOWN_DOWN:
-            character.y_dir -= 2
-            character.dir = 100
-
-    def exit(character, event):
-        pass
-
-    def do(character):
-        character.frame = (character.frame + 1) % 9
-        character.x += character.x_dir * 5
-        character.y += character.y_dir * 5
-    def draw(character):
-        if character.turn == 0:
-            character.image.clip_draw(character.frame * 89, character.dir, 100, 100, character.x, character.y, 80, 100)
-
-class RunState:
-    def enter(character, event):
-        if event == RIGHT_DOWN:
-            character.x_dir += 2
-            character.dir = 0
-        elif event == LEFT_DOWN:
-            character.x_dir -= 2
-            character.dir = 200
-        elif event == UP_DOWN:
-            character.y_dir += 2
-            character.dir = 300
-        elif event == DOWN_DOWN:
-            character.y_dir -= 2
-            character.dir = 100
-        elif event == RIGHT_UP:
-            character.x_dir -= 2
-            character.dir = 0
-        elif event == LEFT_UP:
-            character.x_dir += 2
-            character.dir = 200
-        elif event == UP_UP:
-            character.y_dir -= 2
-            character.dir = 300
-        elif event == DOWN_UP:
-            character.y_dir += 2
-            character.dir = 100
-
-    def exit(character,event):
-        pass
-
-    def do(character):
-        character.frame = (character.frame + 1) % 9
-        character.x += character.x_dir * 5
-        character.y += character.y_dir * 5
-
-    def draw(character):
-        if character.turn == 0:
-            character.image.clip_draw(character.frame * 89, character.dir, 100, 100, character.x, character.y, 80, 100)
-
-
-
 
 next_state_table = {
-    IdleState: {RIGHT_DOWN: RunState, RIGHT_UP: RunState,
-                LEFT_DOWN: RunState, LEFT_UP: RunState,
-                DOWN_DOWN: RunState, DOWN_UP: RunState,
-                UP_DOWN: RunState, UP_UP: RunState},
+    IdleState: {RIGHT_UP: Runstate, LEFT_UP: Runstate, UP_UP: Runstate, DOWN_UP: Runstate,
+                RIGHT_DOWN: Runstate, LEFT_DOWN: Runstate, UP_DOWN: Runstate, DOWN_DOWN: Runstate},
 
-    RunState: {RIGHT_DOWN: IdleState, RIGHT_UP: IdleState,
-                LEFT_DOWN: IdleState, LEFT_UP: IdleState,
-                DOWN_DOWN: IdleState, DOWN_UP: IdleState,
-                UP_DOWN: IdleState, UP_UP: IdleState},
+    Runstate: {RIGHT_UP: IdleState, LEFT_UP: IdleState, UP_UP: IdleState, DOWN_UP: IdleState,
+               RIGHT_DOWN: IdleState, LEFT_DOWN: IdleState, UP_DOWN: IdleState, DOWN_DOWN: IdleState}
 }
