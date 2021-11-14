@@ -33,13 +33,13 @@ class IdleState:
             Player.velocity += RUN_SPEED_PPS
             Player.height = 3
         elif event == LEFT_DOWN:
-            Player.veloctiy -= RUN_SPEED_PPS
+            Player.velocity -= RUN_SPEED_PPS
             Player.height = 2
         elif event == UP_DOWN:
-            Player.veloctiy_y += RUN_SPEED_PPS
+            Player.velocity_y += RUN_SPEED_PPS
             Player.height = 0
         elif event == DOWN_DOWN:
-            Player.veloctiy_y -= RUN_SPEED_PPS
+            Player.velocity_y -= RUN_SPEED_PPS
             Player.height = 1
 
     def exit(Player, event):
@@ -50,9 +50,9 @@ class IdleState:
 
     def draw(Player):
         if Player.velocity == 0 and Player.velocity_y == 0:
-            Player.image.clip_draw(int(Player.frame) * 35, 35, 100, 100, Player.x, Player.y)
+            Player.image.clip_draw(int(Player.frame) * 80, 100, 100, 100, Player.x, Player.y)
         else:
-            Player.image.clip_draw(int(Player.frame) * 35, 35 * Player.height, 100, 100, Player.x, Player.y)
+            Player.image.clip_draw(int(Player.frame) * 80, 100 * Player.height, 100, 100, Player.x, Player.y)
 
 
 class Runstate:
@@ -70,6 +70,19 @@ class Runstate:
         elif event == DOWN_DOWN:
             Player.velocity_y -= RUN_SPEED_PPS
             Player.height = 1
+        elif event == RIGHT_UP:
+            Player.velocity -= RUN_SPEED_PPS
+            Player.height = 3
+        elif event == LEFT_UP:
+            Player.velocity += RUN_SPEED_PPS
+            Player.height = 2
+        elif event == UP_UP:
+            Player.velocity_y -= RUN_SPEED_PPS
+            Player.height = 0
+        elif event == DOWN_UP:
+            Player.velocity_y += RUN_SPEED_PPS
+            Player.height = 1
+
         Player.dir = clamp(-1, Player.velocity, 1)
 
     def exit(Player, event):
@@ -78,13 +91,14 @@ class Runstate:
     def do(Player):
         Player.frame = (Player.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
         Player.x += Player.velocity * game_framework.frame_time
+        Player.y += Player.velocity_y * game_framework.frame_time
         Player.x = clamp(25, Player.x, 500)
 
     def draw(Player):
         if Player.velocity == 0 and Player.velocity_y == 0:
-            Player.image.clip_draw(int(Player.frame) * 35, 35, 100, 100, Player.x, Player.y)
+            Player.image.clip_draw(int(Player.frame) * 80, 100, 100, 100, Player.x, Player.y)
         else:
-            Player.image.clip_draw(int(Player.frame) * 35, 35 * Player.height, 100, 100, Player.x, Player.y)
+            Player.image.clip_draw(int(Player.frame) * 80, 100 * Player.height, 100, 100, Player.x, Player.y)
 
 
 class Player:

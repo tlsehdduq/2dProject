@@ -8,17 +8,22 @@ import game_world
 
 from Moonlighter import Player
 from background import Background
-from main import background
+
 
 name = "_main"
 player = None
+background = None
 
 
 def enter():
     global player
+    global background
     player = Player()
-    game_world.add_objects(background,0)
+    background = Background()
+
+    game_world.add_object(background, 0)
     game_world.add_object(player, 1)
+
 
 def exit():
     game_world.clear()
