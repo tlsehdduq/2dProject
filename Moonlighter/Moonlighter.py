@@ -50,9 +50,9 @@ class IdleState:
 
     def draw(Player):
         if Player.velocity == 0 and Player.velocity_y == 0:
-            Player.image.clip_draw(int(Player.frame) * 80, 100, 100, 100, Player.x, Player.y)
+            Player.image.clip_draw(int(Player.frame) * 78, 100, 88, 100, Player.x, Player.y)
         else:
-            Player.image.clip_draw(int(Player.frame) * 80, 100 * Player.height, 100, 100, Player.x, Player.y)
+            Player.image.clip_draw(int(Player.frame) * 78, 100 * Player.height, 88, 100, Player.x, Player.y)
 
 
 class Runstate:
@@ -96,12 +96,13 @@ class Runstate:
 
     def draw(Player):
         if Player.velocity == 0 and Player.velocity_y == 0:
-            Player.image.clip_draw(int(Player.frame) * 80, 100, 100, 100, Player.x, Player.y)
+            Player.image.clip_draw(int(Player.frame) * 78, 100, 88, 100, Player.x, Player.y)
         else:
-            Player.image.clip_draw(int(Player.frame) * 80, 100 * Player.height, 100, 100, Player.x, Player.y)
+            Player.image.clip_draw(int(Player.frame) * 78, 100 * Player.height, 88, 100, Player.x, Player.y)
 
 
 class Player:
+
     def __init__(self):
         self.image = load_image('Player.png')
         self.x, self.y = 200, 300
