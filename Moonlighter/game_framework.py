@@ -9,7 +9,6 @@ class GameState:
         self.draw = state.draw
 
 
-
 class TestGameState:
 
     def __init__(self, name):
@@ -37,7 +36,6 @@ class TestGameState:
         print("State [%s] draw" % self.name)
 
 
-
 running = None
 stack = None
 
@@ -53,14 +51,12 @@ def change_state(state):
     state.enter()
 
 
-
 def push_state(state):
     global stack
     if (len(stack) > 0):
         stack[-1].pause()
     stack.append(state)
     state.enter()
-
 
 
 def pop_state():
@@ -76,10 +72,10 @@ def pop_state():
         stack[-1].resume()
 
 
-
 def quit():
     global running
     running = False
+
 
 import time
 frame_time = 0.0
@@ -99,9 +95,9 @@ def run(start_page):
         stack[-1].update()
         stack[-1].draw()
     # repeatedly delete the top of the stack
-    frame_time = time.time() - current_time
-    frame_rate = 1.0/frame_time
-    current_time += frame_time
+        frame_time = time.time() - current_time
+        frame_rate = 1.0 / frame_time
+        current_time += frame_time
     while (len(stack) > 0):
         stack[-1].exit()
         stack.pop()
@@ -110,7 +106,6 @@ def run(start_page):
 def test_game_framework():
     start_page = TestGameState('start_page')
     run(start_page)
-
 
 
 if __name__ == '__main__':

@@ -45,8 +45,9 @@ def handle_events():
             player.handle_event(event)
 
 def update():
-    for game_object in game_world.all_objects():
-        game_object.update()
+
+        for game_object in game_world.all_objects():
+            game_object.update()
 
 def draw():
     clear_canvas()

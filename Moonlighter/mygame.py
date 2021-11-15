@@ -5,4 +5,4 @@ import start_page
 import _main
 
 pico2d.open_canvas(1200,720)
-game_framework.run(start_page)
+game_framework.run(_main)
