@@ -1,7 +1,6 @@
 import game_framework
 from pico2d import *
 
-
 PIXEL_PER_METER = (30.0 / 0.6)
 RUN_SPEED_KMPH = 15.0
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
@@ -37,9 +36,11 @@ class IdleState:
             Player.height = 1
         elif event == UP_DOWN:
             Player.velocity_y += RUN_SPEED_PPS
-            Player.height = 2
+            Player.UD = 0
+            Player.height = 3
         elif event == DOWN_DOWN:
             Player.velocity_y -= RUN_SPEED_PPS
+            Player.UD = 1
             Player.height = 3
         elif event == RIGHT_UP:
             Player.velocity -= RUN_SPEED_PPS
@@ -49,11 +50,12 @@ class IdleState:
             Player.height = 1
         elif event == UP_UP:
             Player.velocity_y -= RUN_SPEED_PPS
-            Player.height = 2
+            Player.UD = 0
+            Player.height = 3
         elif event == DOWN_UP:
             Player.velocity_y += RUN_SPEED_PPS
+            Player.UD = 1
             Player.height = 3
-
 
     def exit(Player, event):
         pass
@@ -64,10 +66,11 @@ class IdleState:
 
     def draw(Player):
         if Player.velocity == 0 and Player.velocity_y == 0:
-            Player.image.clip_draw(int(Player.frame2) * 80, 100, 80, 100, Player.x, Player.y)
-        else:
+            Player.image.clip_draw(int(Player.frame2) * 80, 100, 80, 100, Player.x, Player.y, 50, 50)
+        elif Player.height == 0 or Player.height == 1:
             Player.RLimage.clip_draw(int(Player.frame) * 50, 59 * Player.height, 47, 59, Player.x, Player.y)
-
+        elif Player.UD == 0 or Player.UD == 1:
+            Player.UDimage.clip_draw(int(Player.frame3) * 49, 81 * Player.UD, 49, 81, Player.x, Player.y,40,40)
 
 
 class Runstate:
@@ -81,9 +84,11 @@ class Runstate:
             Player.height = 1
         elif event == UP_DOWN:
             Player.velocity_y += RUN_SPEED_PPS
-            Player.height = 2
+            Player.UD = 0
+            Player.height = 3
         elif event == DOWN_DOWN:
             Player.velocity_y -= RUN_SPEED_PPS
+            Player.UD = 1
             Player.height = 3
         elif event == RIGHT_UP:
             Player.velocity -= RUN_SPEED_PPS
@@ -93,13 +98,14 @@ class Runstate:
             Player.height = 1
         elif event == UP_UP:
             Player.velocity_y -= RUN_SPEED_PPS
-            Player.height = 2
+            Player.UD = 0
+            Player.height = 3
         elif event == DOWN_UP:
             Player.velocity_y += RUN_SPEED_PPS
+            Player.UD = 1
             Player.height = 3
         Player.dir_x = int(Player.velocity)
         Player.dir_y = int(Player.velocity_y)
-
 
     def exit(Player, event):
         pass
@@ -107,6 +113,7 @@ class Runstate:
     def do(Player):
         Player.frame = (Player.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         Player.frame2 = (Player.frame2 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
+        Player.frame3 = (Player.frame3 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         Player.x += Player.velocity * game_framework.frame_time
         Player.y += Player.velocity_y * game_framework.frame_time
         Player.x = clamp(25, Player.x, 900)
@@ -115,9 +122,10 @@ class Runstate:
     def draw(Player):
         if Player.velocity == 0 and Player.velocity_y == 0:
             Player.image.clip_draw(int(Player.frame2) * 80, 100, 80, 100, Player.x, Player.y)
-        else:
+        elif Player.height == 0 or Player.height == 1:
             Player.RLimage.clip_draw(int(Player.frame) * 50, 59 * Player.height, 47, 59, Player.x, Player.y)
-
+        elif Player.UD == 0 or Player.UD == 1:
+            Player.UDimage.clip_draw(int(Player.frame3) * 49, 81 * Player.UD, 49, 81, Player.x, Player.y,40,40)
 
 
 next_state_table = {
@@ -134,10 +142,11 @@ class Player:
     def __init__(self):
         self.image = load_image('Player1.png')
         self.RLimage = load_image('Left-down.png')
-        self.UDimage = load_image('UP-down.png')
+        self.UDimage = load_image('UP_down.png')
         self.x, self.y = 200, 300
         self.frame2 = 0
         self.frame = 0
+        self.frame3 = 0
         self.dir_x = 1
         self.dir_y = 1
         self.velocity = 0
@@ -145,6 +154,7 @@ class Player:
         self.event_que = []
         self.cur_state = IdleState
         self.height = 0
+        self.UD = 0
         self.cur_state.enter(self, None)
 
     def add_event(self, event):
@@ -165,5 +175,3 @@ class Player:
         if (event.type, event.key) in key_event_table:
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
-
-
