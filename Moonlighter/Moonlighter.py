@@ -70,7 +70,7 @@ class IdleState:
         elif Player.height == 0 or Player.height == 1:
             Player.RLimage.clip_draw(int(Player.frame) * 50, 59 * Player.height, 47, 59, Player.x, Player.y)
         elif Player.UD == 0 or Player.UD == 1:
-            Player.UDimage.clip_draw(int(Player.frame3) * 50, 81 * Player.UD, 50, 81, Player.x, Player.y,40,40)
+            Player.UDimage.clip_draw(int(Player.frame3) * 50, 81 * Player.UD, 50, 81, Player.x, Player.y, 40, 40)
 
 
 class Runstate:
@@ -125,7 +125,7 @@ class Runstate:
         elif Player.height == 0 or Player.height == 1:
             Player.RLimage.clip_draw(int(Player.frame) * 50, 59 * Player.height, 47, 59, Player.x, Player.y)
         elif Player.UD == 0 or Player.UD == 1:
-            Player.UDimage.clip_draw(int(Player.frame3) * 50, 81 * Player.UD, 50, 81, Player.x, Player.y,40,40)
+            Player.UDimage.clip_draw(int(Player.frame3) * 50, 81 * Player.UD, 50, 81, Player.x, Player.y, 40, 40)
 
 
 next_state_table = {
@@ -156,9 +156,13 @@ class Player:
         self.height = 0
         self.UD = 0
         self.cur_state.enter(self, None)
+        self.HP = 1000
 
     def add_event(self, event):
         self.event_que.insert(0, event)
+
+    def get_bb(self):
+        return self.x - 20, self.y - 20, self.x + 20, self.y + 20
 
     def update(self):
         self.cur_state.do(self)
@@ -170,6 +174,7 @@ class Player:
 
     def draw(self):
         self.cur_state.draw(self)
+        draw_rectangle(*self.get_bb())
 
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:
