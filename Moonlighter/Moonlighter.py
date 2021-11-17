@@ -70,7 +70,7 @@ class IdleState:
         elif Player.height == 0 or Player.height == 1:
             Player.RLimage.clip_draw(int(Player.frame) * 50, 59 * Player.height, 47, 59, Player.x, Player.y)
         elif Player.UD == 0 or Player.UD == 1:
-            Player.UDimage.clip_draw(int(Player.frame3) * 49, 81 * Player.UD, 49, 81, Player.x, Player.y,40,40)
+            Player.UDimage.clip_draw(int(Player.frame3) * 50, 81 * Player.UD, 50, 81, Player.x, Player.y,40,40)
 
 
 class Runstate:
@@ -116,8 +116,8 @@ class Runstate:
         Player.frame3 = (Player.frame3 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         Player.x += Player.velocity * game_framework.frame_time
         Player.y += Player.velocity_y * game_framework.frame_time
-        Player.x = clamp(25, Player.x, 900)
-        Player.y = clamp(30, Player.y, 700)
+        Player.x = clamp(150, Player.x, 1100)
+        Player.y = clamp(110, Player.y, 600)
 
     def draw(Player):
         if Player.velocity == 0 and Player.velocity_y == 0:
@@ -125,7 +125,7 @@ class Runstate:
         elif Player.height == 0 or Player.height == 1:
             Player.RLimage.clip_draw(int(Player.frame) * 50, 59 * Player.height, 47, 59, Player.x, Player.y)
         elif Player.UD == 0 or Player.UD == 1:
-            Player.UDimage.clip_draw(int(Player.frame3) * 49, 81 * Player.UD, 49, 81, Player.x, Player.y,40,40)
+            Player.UDimage.clip_draw(int(Player.frame3) * 50, 81 * Player.UD, 50, 81, Player.x, Player.y,40,40)
 
 
 next_state_table = {
