@@ -2,49 +2,37 @@ import random
 import json
 import os
 
-import loading
-import villagestate
 from pico2d import *
 import game_framework
 import game_world
-
-from Arrow import arrow
+import villagestate
+import _main
 from Moonlighter import Player
-from background import Background
-from Monster import Golem
-from portal import Portal
+from Bossbackground import BossBackground
+from BOSS import Boss
 
-name = "_main"
+
+name = "Bossroom"
 player = None
 background = None
-golem = None
-Door = None
-p_arrow = None
+boss = None
+
 
 
 def enter():
     global player
     global background
-    global golem
-    global Door
-    global p_arrow
+    global boss
+
+    boss = Boss()
     player = Player()
-    background = Background()
-    golem = Golem()
-    Door = Portal()
-    p_arrow = arrow()
+    background = BossBackground()
+
+
 
     game_world.add_object(background, 0)
     game_world.add_object(player, 1)
-    game_world.add_object(Door, 1)
-
-    golem = [Golem() for i in range(6)]
-
-    game_world.add_objects(golem, 1)
-
-    if player.fire_arrow():
-        game_world.add_objects(p_arrow,1)
-
+    game_world.add_object(boss, 1)
 
 
 def exit():
@@ -74,17 +62,9 @@ def update():
     for game_object in game_world.all_objects():
         game_object.update()
 
-    if collide(player, Door):
-        game_framework.change_state(loading)
-    for enemy in golem:
-        if collide(player, enemy):
-            print("COLLISION")
-            player.HP -= 2
-            print(player.HP)
-    for golems in golem:
-        if collide(golems, p_arrow):
-            golem.remove(golems)
-            game_world.remove_object(golems)
+    if collide(player, boss):
+         player.HP -= 100
+         print(player.HP)
 
     if player.HP <= 0:
         game_framework.change_state(villagestate)

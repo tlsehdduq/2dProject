@@ -3,61 +3,43 @@ import json
 import os
 
 import loading
-import villagestate
+
 from pico2d import *
 import game_framework
 import game_world
+import _main
 
-from Arrow import arrow
 from Moonlighter import Player
-from background import Background
-from Monster import Golem
-from portal import Portal
+from village import Village
+from villageportal import Portal
 
-name = "_main"
+name = "villagestate"
 player = None
 background = None
-golem = None
 Door = None
-p_arrow = None
+
 
 
 def enter():
     global player
     global background
-    global golem
     global Door
-    global p_arrow
     player = Player()
-    background = Background()
-    golem = Golem()
+    background = Village()
     Door = Portal()
-    p_arrow = arrow()
 
     game_world.add_object(background, 0)
     game_world.add_object(player, 1)
     game_world.add_object(Door, 1)
 
-    golem = [Golem() for i in range(6)]
-
-    game_world.add_objects(golem, 1)
-
-    if player.fire_arrow():
-        game_world.add_objects(p_arrow,1)
-
-
-
 def exit():
     game_world.clear()
-
 
 def pause():
     pass
 
-
 def resume():
     pass
-
 
 def handle_events():
     events = get_events()
@@ -69,33 +51,18 @@ def handle_events():
         else:
             player.handle_event(event)
 
-
 def update():
     for game_object in game_world.all_objects():
         game_object.update()
 
     if collide(player, Door):
         game_framework.change_state(loading)
-    for enemy in golem:
-        if collide(player, enemy):
-            print("COLLISION")
-            player.HP -= 2
-            print(player.HP)
-    for golems in golem:
-        if collide(golems, p_arrow):
-            golem.remove(golems)
-            game_world.remove_object(golems)
-
-    if player.HP <= 0:
-        game_framework.change_state(villagestate)
-
 
 def draw():
     clear_canvas()
     for game_object in game_world.all_objects():
         game_object.draw()
     update_canvas()
-
 
 def collide(a, b):
     left_a, bottom_a, right_a, top_a = a.get_bb()
