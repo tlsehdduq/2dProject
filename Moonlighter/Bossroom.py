@@ -63,7 +63,7 @@ def update():
         game_object.update()
 
     if collide(player, boss):
-         player.HP -= 100
+         player.HP -= 30
          print(player.HP)
 
     if player.HP <= 0:
