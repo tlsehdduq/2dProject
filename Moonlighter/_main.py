@@ -83,11 +83,14 @@ def update():
             print(player.HP)
     for golems in golem:
         if collide(golems, p_arrow):
-            golem.remove(golems)
-            game_world.remove_object(golems)
+            golems.HP -= 5
+            print(golems.HP)
 
     if player.HP <= 0:
         game_framework.change_state(villagestate)
+    for golems in golem:
+        if golems.HP <= 0:
+            game_world.remove_object(golems)
 
 
 def draw():
