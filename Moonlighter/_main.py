@@ -38,16 +38,16 @@ def enter():
     game_world.add_object(player, 1)
     game_world.add_object(Door, 1)
 
+
+
     golem = [Golem() for i in range(6)]
 
     game_world.add_objects(golem, 1)
 
-    if player.fire_arrow():
-        game_world.add_objects(p_arrow,1)
-
 
 
 def exit():
+
     game_world.clear()
 
 
@@ -81,19 +81,8 @@ def update():
             print("COLLISION")
             player.HP -= 2
             print(player.HP)
-    for golems in golem:
-        if collide(golems, p_arrow):
-            golems.HP -= 5
-            print(golems.HP)
-            if golems.HP <= 0:
-                golem.remove(golems)
-                game_world.remove_object(golems)
-
     if player.HP <= 0:
         game_framework.change_state(villagestate)
-    for golems in golem:
-        if golems.HP <= 0:
-            game_world.remove_object(golems)
 
 
 def draw():

@@ -18,6 +18,7 @@ class Boss:
         self.dir = 1
         self.velocity = 0
         self.frame = 0
+        self.HP = 1000
 
     def get_bb(self):
         return self.x - 50, self.y - 50, self.x + 50, self.y + 50

@@ -2,6 +2,7 @@ import game_framework
 from pico2d import *
 import game_world
 import random
+import Arrow
 
 
 PIXEL_PER_METER = ( 10/ 7 )

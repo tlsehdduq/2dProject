@@ -3,6 +3,8 @@ import json
 import os
 
 from pico2d import *
+
+import Moonlighter
 import game_framework
 import game_world
 import villagestate
@@ -10,29 +12,30 @@ import _main
 from Moonlighter import Player
 from Bossbackground import BossBackground
 from BOSS import Boss
-
+from Arrow import arrow
 
 name = "Bossroom"
 player = None
 background = None
 boss = None
-
+p_arrow = None
 
 
 def enter():
     global player
     global background
     global boss
+    global p_arrow
 
     boss = Boss()
     player = Player()
     background = BossBackground()
-
-
+    p_arrow = arrow()
 
     game_world.add_object(background, 0)
     game_world.add_object(player, 1)
     game_world.add_object(boss, 1)
+    game_world.add_object(p_arrow,1)
 
 
 def exit():
@@ -63,8 +66,12 @@ def update():
         game_object.update()
 
     if collide(player, boss):
-         player.HP -= 30
-         print(player.HP)
+        player.HP -= 30
+        print(player.HP)
+
+    if collide(p_arrow, boss):
+        boss.HP -= 50
+        print(boss.HP)
 
     if player.HP <= 0:
         game_framework.change_state(villagestate)

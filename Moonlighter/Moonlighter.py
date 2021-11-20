@@ -2,6 +2,7 @@ import game_framework
 from pico2d import *
 import game_world
 from Arrow import arrow
+import _main
 
 
 PIXEL_PER_METER = (30.0 / 0.6)
@@ -44,11 +45,11 @@ class IdleState:
         elif event == UP_DOWN:
             Player.velocity_y += RUN_SPEED_PPS
             Player.UD = 0
-            Player.height = 3
+            # Player.height = 3
         elif event == DOWN_DOWN:
             Player.velocity_y -= RUN_SPEED_PPS
             Player.UD = 1
-            Player.height = 3
+            # Player.height = 3
         elif event == RIGHT_UP:
             Player.velocity -= RUN_SPEED_PPS
             Player.height = 0
@@ -58,13 +59,14 @@ class IdleState:
         elif event == UP_UP:
             Player.velocity_y -= RUN_SPEED_PPS
             Player.UD = 0
-            Player.height = 3
+            # Player.height = 3
         elif event == DOWN_UP:
             Player.velocity_y += RUN_SPEED_PPS
             Player.UD = 1
-            Player.height = 3
+            # Player.height = 3
 
     def exit(Player, event):
+
         if event == ATTACK_DOWN:
             Player.fire_arrow()
 
@@ -112,10 +114,12 @@ class Runstate:
             Player.velocity_y += RUN_SPEED_PPS
             Player.UD = 1
             Player.height = 3
+
         Player.dir_x = int(Player.velocity)
         Player.dir_y = int(Player.velocity_y)
 
     def exit(Player, event):
+        pass
         if event == ATTACK_DOWN:
             Player.fire_arrow()
 
@@ -144,6 +148,7 @@ class AttackState:
             Player.Rat = 0
 
     def exit(Player, event):
+        pass
         if event == ATTACK_DOWN:
             Player.fire_arrow()
 

@@ -1,11 +1,13 @@
 from pico2d import *
 import game_world
-
-PIXEL_PER_METER = (30.0 / 0.6)
-RUN_SPEED_KMPH = 2.0
+from Monster import Golem
+PIXEL_PER_METER = (30.0 / 1.0)
+RUN_SPEED_KMPH = 1.0
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+
 
 class arrow:
     image = None
@@ -19,6 +21,7 @@ class arrow:
 
     def draw(self):
         self.image.draw(self.x, self.y)
+        draw_rectangle(*self.get_bb())
 
     def get_bb(self):
         return self.x - 10, self.y - 10, self.x + 10, self.y + 10
@@ -26,5 +29,8 @@ class arrow:
     def update(self):
         self.x += self.velocity + RUN_SPEED_PPS
 
+
         if self.x < 25 or self.x > 1600 - 25:
             game_world.remove_object(self)
+
+
