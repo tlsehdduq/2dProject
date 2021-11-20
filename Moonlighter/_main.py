@@ -27,27 +27,28 @@ def enter():
     global background
     global golem
     global Door
-    global p_arrow
+    global Arrow
     player = Player()
     background = Background()
     golem = Golem()
     Door = Portal()
-    p_arrow = arrow()
-
+    Arrow = arrow()
     game_world.add_object(background, 0)
     game_world.add_object(player, 1)
     game_world.add_object(Door, 1)
-
-
 
     golem = [Golem() for i in range(6)]
 
     game_world.add_objects(golem, 1)
 
 
+def fire_arrow(player):
+    global Arrow
+    Arrow = arrow(player.x, player.y, player.dir_x * 3)
+    game_world.add_object(Arrow, 1)
+
 
 def exit():
-
     game_world.clear()
 
 
@@ -66,6 +67,8 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_j:
+            fire_arrow(player)
         else:
             player.handle_event(event)
 
@@ -76,11 +79,18 @@ def update():
 
     if collide(player, Door):
         game_framework.change_state(loading)
+
     for enemy in golem:
         if collide(player, enemy):
             print("COLLISION")
             player.HP -= 2
             print(player.HP)
+
+        if collide(enemy,Arrow):
+            golem.remove(enemy)
+            game_world.remove_object(enemy)
+            print('Collision')
+
     if player.HP <= 0:
         game_framework.change_state(villagestate)
 

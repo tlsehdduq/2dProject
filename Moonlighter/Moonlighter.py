@@ -148,7 +148,7 @@ class AttackState:
             Player.Rat = 0
 
     def exit(Player, event):
-        pass
+
         if event == ATTACK_DOWN:
             Player.fire_arrow()
 
