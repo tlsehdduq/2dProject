@@ -211,7 +211,7 @@ class Player:
     def fire_arrow(self):
         Arrow = arrow(self.x, self.y, self.dir_x * 3)
         game_world.add_object(Arrow, 1)
-
+        AttackState.draw()
     def update(self):
         self.cur_state.do(self)
         if len(self.event_que) > 0:
