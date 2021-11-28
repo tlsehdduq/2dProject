@@ -35,7 +35,7 @@ def enter():
     game_world.add_object(background, 0)
     game_world.add_object(player, 1)
     game_world.add_object(boss, 1)
-    game_world.add_object(p_arrow,1)
+
 
 
 def exit():

@@ -1,6 +1,8 @@
 from pico2d import *
 import game_world
 from Monster import Golem
+import server
+import collision
 PIXEL_PER_METER = (30.0 / 1.0)
 RUN_SPEED_KMPH = 1.0
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
@@ -28,6 +30,13 @@ class arrow:
 
     def update(self):
         self.x += self.velocity + RUN_SPEED_PPS
+        for golems in server.golem:
+            if collision.collide(self,golems):
+                game_world.remove_object(self)
+                golems.HP -= 10
+                print(golems.HP)
+                break
+
 
 
         if self.x < 25 or self.x > 1600 - 25:

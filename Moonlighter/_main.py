@@ -7,6 +7,8 @@ import villagestate
 from pico2d import *
 import game_framework
 import game_world
+import server
+from collision import collide
 
 from Arrow import arrow
 from Moonlighter import Player
@@ -15,37 +17,26 @@ from Monster import Golem
 from portal import Portal
 
 name = "_main"
-player = None
-background = None
-golem = None
-Door = None
-p_arrow = None
-
 
 def enter():
-    global player
-    global background
-    global golem
-    global Door
-    global Arrow
-    player = Player()
-    background = Background()
-    golem = Golem()
-    Door = Portal()
-    Arrow = arrow()
-    game_world.add_object(background, 0)
-    game_world.add_object(player, 1)
-    game_world.add_object(Door, 1)
+    server.player = Player()
+    server.background = Background()
+    server.golem = Golem()
+    server.Door = Portal()
+    server.Arrow = arrow()
+    game_world.add_object(server.background, 0)
+    game_world.add_object(server.player, 1)
+    game_world.add_object(server.Door, 1)
 
-    golem = [Golem() for i in range(6)]
+    server.golem = [Golem() for i in range(6)]
 
-    game_world.add_objects(golem, 1)
+    game_world.add_objects(server.golem, 1)
 
-
-def fire_arrow(player):
-    global Arrow
-    Arrow = arrow(player.x, player.y, player.dir_x * 3)
-    game_world.add_object(Arrow, 1)
+#
+# def fire_arrow(player):
+#     global Arrow
+#     Arrow = arrow(player.x, player.y, player.dir_x * 3)
+#     game_world.add_object(Arrow, 1)
 
 
 def exit():
@@ -67,34 +58,27 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_j:
-            fire_arrow(player)
         else:
-            player.handle_event(event)
+            server.player.handle_event(event)
 
 
 def update():
     for game_object in game_world.all_objects():
         game_object.update()
 
-    if collide(player, Door):
+    if collide(server.player, server.Door):
         game_framework.change_state(loading)
 
-    for enemy in golem:
-        if collide(player, enemy):
-            print("COLLISION")
-            player.HP -= 2
-            print(player.HP)
-
-        if collide(enemy,Arrow):
+    for enemy in server.golem:
+        if collide(enemy, server.Arrow):
+            game_world.remove_object(server.Arrow)
             enemy.HP -= 10
-            if enemy.HP <= 0 :
-
-                golem.remove(enemy)
+            if enemy.HP <= 0:
+                server.golem.remove(enemy)
                 game_world.remove_object(enemy)
             print(enemy.HP)
 
-    if player.HP <= 0:
+    if server.player.HP <= 0:
         game_framework.change_state(villagestate)
 
 
@@ -105,11 +89,3 @@ def draw():
     update_canvas()
 
 
-def collide(a, b):
-    left_a, bottom_a, right_a, top_a = a.get_bb()
-    left_b, bottom_b, right_b, top_b = b.get_bb()
-    if left_a > right_b: return False
-    if right_a < left_b: return False
-    if top_a < bottom_b: return False
-    if bottom_a > top_b: return False
-    return True

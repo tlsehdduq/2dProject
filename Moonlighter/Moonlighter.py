@@ -3,6 +3,8 @@ from pico2d import *
 import game_world
 from Arrow import arrow
 import _main
+import server
+import collision
 
 
 PIXEL_PER_METER = (30.0 / 0.6)
@@ -29,7 +31,6 @@ key_event_table = {
     (SDL_KEYUP, SDLK_DOWN): DOWN_UP,
 
     (SDL_KEYDOWN, SDLK_j): ATTACK_DOWN,
-
 
 }
 
@@ -66,7 +67,6 @@ class IdleState:
             # Player.height = 3
 
     def exit(Player, event):
-
         if event == ATTACK_DOWN:
             Player.fire_arrow()
 
@@ -143,8 +143,8 @@ class Runstate:
 
 class AttackState:
     def enter(Player, event):
-        if event == ATTACK_DOWN:
 
+        if event == ATTACK_DOWN:
             Player.Rat = 0
 
     def exit(Player, event):
@@ -201,6 +201,7 @@ class Player:
         self.Rat = 0
         self.cur_state.enter(self, None)
         self.HP = 1000
+        self.parent = 0
 
     def add_event(self, event):
         self.event_que.insert(0, event)
@@ -211,7 +212,8 @@ class Player:
     def fire_arrow(self):
         Arrow = arrow(self.x, self.y, self.dir_x * 3)
         game_world.add_object(Arrow, 1)
-        AttackState.draw()
+        AttackState.draw(self)
+
     def update(self):
         self.cur_state.do(self)
         if len(self.event_que) > 0:
@@ -219,10 +221,15 @@ class Player:
             self.cur_state.exit(self, event)
             self.cur_state = next_state_table[self.cur_state][event]
             self.cur_state.enter(self, event)
+        for golems in server.golem:
+            if collision.collide(self,golems):
+                self.HP -= 10
+                break
 
     def draw(self):
         self.cur_state.draw(self)
         # draw_rectangle(*self.get_bb())
+
 
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:
