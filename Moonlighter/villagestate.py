@@ -8,6 +8,7 @@ from pico2d import *
 import game_framework
 import game_world
 import _main
+import title_state
 
 from Moonlighter import Player
 from village import Village
@@ -56,7 +57,7 @@ def update():
         game_object.update()
 
     if collide(player, Door):
-        game_framework.change_state(loading)
+        game_framework.change_state(title_state)
 
 def draw():
     clear_canvas()

@@ -221,12 +221,21 @@ class Player:
             self.cur_state.exit(self, event)
             self.cur_state = next_state_table[self.cur_state][event]
             self.cur_state.enter(self, event)
+
         for golems in server.golem:
             if collision.collide(self,golems):
                 self.HP -= 10
+                print(self.HP)
                 break
-        if collision.collide(self,server.boss):
-            self.HP -= 100
+
+        for fgolems in server.flyinggolem:
+            if collision.collide(self,fgolems):
+                self.HP -= 20
+
+                break
+
+
+
 
     def draw(self):
         self.cur_state.draw(self)

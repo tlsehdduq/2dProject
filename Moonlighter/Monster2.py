@@ -2,8 +2,9 @@ import game_framework
 from pico2d import *
 import game_world
 import random
-import server
+
 from BehaviorTree import BehaviorTree, SelectorNode, SequenceNode, LeafNode
+import server
 
 PIXEL_PER_METER = (10 / 0.3)
 RUN_SPEED_KMPH = 10.0
@@ -11,43 +12,46 @@ RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
-TIME_PER_ACTION = 1.5
+TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
-FRAMES_PER_ACTION = 9
+FRAMES_PER_ACTION = 6
 
 
-class Boss:
+class FlyingGolem:
 
     def __init__(self):
-        self.x, self.y = 600, 200
-        self.image = load_image('Boss_sprite.png')
+        self.x, self.y = random.randint(500, 1100), random.randint(200, 600)
+        self.image = load_image('flyinggolem.png')
         self.dir = 1
         self.velocity = 0
         self.frame = 0
-        self.HP = 1000
+        self.HP = 100
         self.speed = 0
         self.timer = 1.0
         self.wait_timer = 0
         self.build_behavior_tree()
 
     def get_bb(self):
-        return self.x - 50, self.y - 50, self.x + 50, self.y + 50
+        return self.x - 5, self.y - 5, self.x + 5, self.y + 5
 
     def update(self):
         self.bt.run()
         self.frame = (self.frame +
                       FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % FRAMES_PER_ACTION
+
         self.x += self.speed * math.cos(self.dir) * game_framework.frame_time
         self.y += self.speed * math.sin(self.dir) * game_framework.frame_time
         self.x = clamp(50, self.x, 1280 - 50)
         self.y = clamp(50, self.y, 1024 - 50)
+
         if self.HP <= 0:
-            server.boss.remove(self)
+            server.flyinggolem.remove(self)
             game_world.remove_object(self)
-            # game_framework.change_state(villagestate)
+
+
 
     def draw(self):
-        self.image.clip_draw(int(self.frame) * 262, 0, 262, 252, self.x, self.y)
+        self.image.clip_draw(int(self.frame) * 33, 0, 33, 55, self.x, self.y)
         # draw_rectangle(*self.get_bb())
 
     def build_behavior_tree(self):
