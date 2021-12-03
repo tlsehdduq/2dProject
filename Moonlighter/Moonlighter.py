@@ -225,6 +225,8 @@ class Player:
             if collision.collide(self,golems):
                 self.HP -= 10
                 break
+        if collision.collide(self,server.boss):
+            self.HP -= 100
 
     def draw(self):
         self.cur_state.draw(self)

@@ -55,7 +55,10 @@ class Golem:
         #         self.x += RUN_SPEED_PPS
         #         self.dir = 1
         if self.HP <= 0:
+            server.golem.remove(self)
             game_world.remove_object(self)
+
+
 
     def draw(self):
         self.image.clip_draw(int(self.frame) * 20, 0, 20, 30, self.x, self.y)
