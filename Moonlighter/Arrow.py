@@ -39,6 +39,7 @@ class arrow:
 
         if collision.collide(self, server.boss):
             server.boss.HP -= 10
+            game_world.remove_object(self)
             print(server.boss.HP)
         for fgolems in server.flyinggolem:
             if collision.collide(self, fgolems):

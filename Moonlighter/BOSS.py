@@ -14,6 +14,7 @@ RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 TIME_PER_ACTION = 1.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 9
+FRAMES_PER_ACTION2 = 81
 
 
 class Boss:
@@ -21,9 +22,11 @@ class Boss:
     def __init__(self):
         self.x, self.y = 600, 200
         self.image = load_image('Boss_sprite.png')
+        self.deathimage = load_image('bossdeath.png')
         self.dir = 1
         self.velocity = 0
         self.frame = 0
+        self.frame2 = 0
         self.HP = 1000
         self.speed = 0
         self.timer = 1.0
@@ -37,17 +40,21 @@ class Boss:
         self.bt.run()
         self.frame = (self.frame +
                       FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % FRAMES_PER_ACTION
+
         self.x += self.speed * math.cos(self.dir) * game_framework.frame_time
         self.y += self.speed * math.sin(self.dir) * game_framework.frame_time
         self.x = clamp(50, self.x, 1280 - 50)
         self.y = clamp(50, self.y, 1024 - 50)
-        if self.HP <= 0:
-            server.boss.remove(self)
-            game_world.remove_object(self)
-            # game_framework.change_state(villagestate)
+
+        # server.boss.remove(self)
+        # game_world.remove_object(self)
+        # game_framework.change_state(villagestate)
 
     def draw(self):
-        self.image.clip_draw(int(self.frame) * 262, 0, 262, 252, self.x, self.y)
+        if self.HP > 0:
+            self.image.clip_draw(int(self.frame) * 262, 0, 262, 252, self.x, self.y)
+        elif self.HP <= 0:
+            self.deathimage.draw(self.x, self.y)
         # draw_rectangle(*self.get_bb())
 
     def build_behavior_tree(self):
@@ -83,14 +90,20 @@ class Boss:
         return BehaviorTree.RUNNING
 
     def find_player(self):
-        distance = (server.player.x - self.x) ** 2 + (server.player.y - self.y) ** 2
-        if distance < (PIXEL_PER_METER * 10) ** 2:
-            return BehaviorTree.SUCCESS
-        else:
-            self.speed = 0
-            return BehaviorTree.RUNNING
+        if self.HP > 0:
+            distance = (server.player.x - self.x) ** 2 + (server.player.y - self.y) ** 2
+            if distance < (PIXEL_PER_METER * 10) ** 2:
+                return BehaviorTree.SUCCESS
+            else:
+                self.speed = 0
+                return BehaviorTree.RUNNING
+        elif self.HP <= 0:
+            self.distance = 0
 
     def move_to_player(self):
-        self.speed = RUN_SPEED_PPS
-        self.dir = math.atan2(server.player.y - self.y, server.player.x - self.x)
-        return BehaviorTree.SUCCESS
+        if self.HP > 0:
+            self.speed = RUN_SPEED_PPS
+            self.dir = math.atan2(server.player.y - self.y, server.player.x - self.x)
+            return BehaviorTree.SUCCESS
+        elif self.HP <= 0:
+            self.speed = 0
