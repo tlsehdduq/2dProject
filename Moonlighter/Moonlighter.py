@@ -17,7 +17,7 @@ TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 10
 
-RIGHT_DOWN, LEFT_DOWN, UP_DOWN, DOWN_DOWN, RIGHT_UP, LEFT_UP, UP_UP, DOWN_UP, ATTACK_DOWN, = range(9)
+RIGHT_DOWN, LEFT_DOWN, UP_DOWN, DOWN_DOWN, RIGHT_UP, LEFT_UP, UP_UP, DOWN_UP, ATTACK_DOWN,ROLL_DOWN = range(10)
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_RIGHT): RIGHT_DOWN,
@@ -31,6 +31,7 @@ key_event_table = {
     (SDL_KEYUP, SDLK_DOWN): DOWN_UP,
 
     (SDL_KEYDOWN, SDLK_j): ATTACK_DOWN,
+    (SDL_KEYDOWN,SDLK_SPACE):ROLL_DOWN
 
 }
 
@@ -158,8 +159,21 @@ class AttackState:
         Player.Ratframe = (Player.Ratframe + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 7
 
     def draw(Player):
-        if Player.Rat == 0:
+        # if Player.Rat == 0:
             Player.Rattack.clip_draw(int(Player.Ratframe) * 32, 0, 32, 34, Player.x, Player.y)
+
+# class rollstate:
+#     def enter(Player, event):
+#
+#     def exit(Player, event):
+#
+#     def do(Player):
+#         Player.frame = (Player.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
+#         Player.frame2 = (Player.frame2 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
+#         Player.Ratframe = (Player.Ratframe + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 7
+#
+#     def draw(Player):
+#         Player.rollimage.clip_draw(int(Player.Ratframe) * 32, 0, 32, 34, Player.x, Player.y)
 
 
 next_state_table = {
@@ -185,6 +199,7 @@ class Player:
         self.RLimage = load_image('Left-down.png')
         self.UDimage = load_image('UP_down.png')
         self.Rattack = load_image('bowat_left_right.png')
+        self.rollimage = load_image('Player_space.png')
         self.x, self.y = 200, 300
         self.frame2 = 0
         self.frame = 0
@@ -233,6 +248,9 @@ class Player:
                 self.HP -= 20
 
                 break
+        if collision.collide(self,server.boss):
+            self.HP -= 50
+
 
 
 
@@ -246,3 +264,5 @@ class Player:
         if (event.type, event.key) in key_event_table:
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
+
+

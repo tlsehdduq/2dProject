@@ -8,6 +8,7 @@ import server
 import game_framework
 import game_world
 import villagestate
+import loading
 from Moonlighter import Player
 from Bossbackground import BossBackground
 from BOSS import Boss
@@ -15,18 +16,10 @@ from Arrow import arrow
 
 
 name = "Bossroom"
-player = None
-background = None
-boss = None
-p_arrow = None
+
 
 
 def enter():
-    global player
-    global background
-    global boss
-    global p_arrow
-
     server.boss = Boss()
     server.player = Player()
     server.background = BossBackground()
@@ -64,7 +57,8 @@ def handle_events():
 def update():
     for game_object in game_world.all_objects():
         game_object.update()
-
+    if server.player.HP <= 0:
+        game_framework.change_state(villagestate)
 
 
 

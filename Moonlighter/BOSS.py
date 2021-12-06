@@ -3,6 +3,7 @@ from pico2d import *
 import game_world
 import random
 import server
+import collision
 from BehaviorTree import BehaviorTree, SelectorNode, SequenceNode, LeafNode
 
 PIXEL_PER_METER = (10 / 0.3)
@@ -45,6 +46,10 @@ class Boss:
         self.y += self.speed * math.sin(self.dir) * game_framework.frame_time
         self.x = clamp(50, self.x, 1280 - 50)
         self.y = clamp(50, self.y, 1024 - 50)
+        if collision.collide(self,server.player):
+            server.player.HP -= 50
+            print(server.player.HP)
+
 
         # server.boss.remove(self)
         # game_world.remove_object(self)

@@ -4,6 +4,7 @@ import game_world
 import random
 from BehaviorTree import BehaviorTree, SelectorNode, SequenceNode, LeafNode
 import server
+import collision
 
 PIXEL_PER_METER = (10 / 0.3)
 RUN_SPEED_KMPH = 10.0
@@ -42,21 +43,11 @@ class Golem:
         self.x = clamp(50, self.x, 1280 - 50)
         self.y = clamp(50, self.y, 1024 - 50)
 
-        # self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 6
-        # if self.dir == 1:
-        #     self.x += RUN_SPEED_PPS
-        #     if self.x >= 1100:
-        #         self.x -= RUN_SPEED_PPS
-        #         self.dir = 0
-        # if self.dir == 0:
-        #     self.x -= RUN_SPEED_PPS
-        #     if self.x <= 150:
-        #         self.x += RUN_SPEED_PPS
-        #         self.dir = 1
 
         if self.HP <= 0:
             server.golem.remove(self)
             game_world.remove_object(self)
+
 
 
 
@@ -72,9 +63,12 @@ class Golem:
         chase_node.add_children(find_player_node, move_to_player_node)
         wander_chase_node = SelectorNode("WanderChase")
         wander_chase_node.add_children(chase_node, wander_node)
+
+
         self.bt = BehaviorTree(wander_chase_node)
 
         self.bt = BehaviorTree(chase_node)
+
 
     def wander(self):
         self.speed = RUN_SPEED_PPS
