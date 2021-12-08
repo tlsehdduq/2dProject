@@ -6,4 +6,4 @@ import Bossroom
 import stage2
 
 pico2d.open_canvas(1200,720)
-game_framework.run(Bossroom)
+game_framework.run(_main)

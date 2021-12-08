@@ -28,7 +28,7 @@ def enter():
     server.Door = Portal()
     server.Arrow = arrow()
 
-    server.boss = Boss()
+
     game_world.add_object(server.background, 0)
     game_world.add_object(server.player, 1)
     game_world.add_object(server.Door, 1)
@@ -76,8 +76,8 @@ def update():
                 game_world.remove_object(enemy)
             print(enemy.HP)
 
-    if server.player.HP <= 0:
-        game_framework.change_state(villagestate)
+    # if server.player.HP <= 0:
+        # game_framework.change_state(villagestate)
 
 
 def draw():

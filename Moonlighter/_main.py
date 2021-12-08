@@ -28,16 +28,14 @@ def enter():
     server.golem = Golem()
     server.Door = Portal()
     server.Arrow = arrow()
-    server.flyinggolem = FlyingGolem()
     server.boss = Boss()
+
     game_world.add_object(server.background, 0)
     game_world.add_object(server.player, 1)
     game_world.add_object(server.Door, 1)
-
     server.golem = [Golem() for i in range(6)]
-    server.flyinggolem = [FlyingGolem() for i in range(5)]
     game_world.add_objects(server.golem, 1)
-    # game_world.add_objects(server.flyinggolem, 1)
+
 
 
 def exit():
@@ -72,6 +70,10 @@ def update():
 
     if server.player.HP <= 0:
         game_framework.change_state(villagestate)
+
+    for golem in server.golem:
+        if collide(golem, server.player):
+            print(server.player.HP)
 
 
 def draw():

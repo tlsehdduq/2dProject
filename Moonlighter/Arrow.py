@@ -33,21 +33,27 @@ class arrow:
         for golems in server.golem:
             if collision.collide(self, golems):
                 game_world.remove_object(self)
-                golems.HP -= 10
+                if(server.player.HP < 1000):
+                    server.player.HP += 5
+                golems.HP -= 40
                 golems.x += 10
                 print(golems.HP)
                 break
 
         if collision.collide(self, server.boss):
-            server.boss.HP -= 10
+            server.boss.HP -= 30
             server.boss.x += 10
+            if (server.player.HP < 1000):
+                server.player.HP += 5
             game_world.remove_object(self)
             print(server.boss.HP)
 
         for fgolems in server.flyinggolem:
             if collision.collide(self, fgolems):
                 game_world.remove_object(self)
-                fgolems.HP -= 10
+                if (server.player.HP < 1000):
+                    server.player.HP += 5
+                fgolems.HP -= 20
                 fgolems.x += 10
                 print(fgolems.HP)
 

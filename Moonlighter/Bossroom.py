@@ -3,6 +3,8 @@ import json
 import os
 
 from pico2d import *
+
+import collision
 from collision import collide
 import server
 import game_framework
@@ -59,6 +61,10 @@ def update():
         game_object.update()
     if server.player.HP <= 0:
         game_framework.change_state(villagestate)
+
+    if collision.collide(server.boss,server.p_arrow):
+        server.boss.HP -= 20
+        print(server.boss.HP)
 
 
 

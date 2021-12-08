@@ -162,19 +162,6 @@ class AttackState:
         # if Player.Rat == 0:
             Player.Rattack.clip_draw(int(Player.Ratframe) * 32, 0, 32, 34, Player.x, Player.y)
 
-# class rollstate:
-#     def enter(Player, event):
-#
-#     def exit(Player, event):
-#
-#     def do(Player):
-#         Player.frame = (Player.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
-#         Player.frame2 = (Player.frame2 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
-#         Player.Ratframe = (Player.Ratframe + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 7
-#
-#     def draw(Player):
-#         Player.rollimage.clip_draw(int(Player.Ratframe) * 32, 0, 32, 34, Player.x, Player.y)
-
 
 next_state_table = {
     IdleState: {RIGHT_UP: Runstate, LEFT_UP: Runstate, UP_UP: Runstate, DOWN_UP: Runstate,
@@ -217,6 +204,8 @@ class Player:
         self.cur_state.enter(self, None)
         self.HP = 1000
         self.parent = 0
+        self.font = load_font('ENCR10B.TTF', 16)
+
 
     def add_event(self, event):
         self.event_que.insert(0, event)
@@ -241,15 +230,16 @@ class Player:
             if collision.collide(self,golems):
                 self.HP -= 10
                 print(self.HP)
-                break
+
 
         for fgolems in server.flyinggolem:
             if collision.collide(self,fgolems):
                 self.HP -= 20
+                print(self.HP)
 
-                break
-        if collision.collide(self,server.boss):
-            self.HP -= 50
+        # if collision.collide(self,server.boss):
+        #     self.HP -= 50
+
 
 
 
@@ -257,7 +247,8 @@ class Player:
 
     def draw(self):
         self.cur_state.draw(self)
-        # draw_rectangle(*self.get_bb())
+        draw_rectangle(*self.get_bb())
+        self.font.draw(self.x, self.y + 50, '(Hp: %0.0f)' % self.HP, (255, 255, 0))
 
 
     def handle_event(self, event):

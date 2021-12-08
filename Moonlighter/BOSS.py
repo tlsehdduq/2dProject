@@ -7,7 +7,7 @@ import collision
 from BehaviorTree import BehaviorTree, SelectorNode, SequenceNode, LeafNode
 
 PIXEL_PER_METER = (10 / 0.3)
-RUN_SPEED_KMPH = 10.0
+RUN_SPEED_KMPH = 5.0
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
@@ -35,7 +35,7 @@ class Boss:
         self.build_behavior_tree()
 
     def get_bb(self):
-        return self.x - 50, self.y - 50, self.x + 50, self.y + 50
+        return self.x - 30, self.y - 30, self.x + 30, self.y + 30
 
     def update(self):
         self.bt.run()
@@ -50,6 +50,9 @@ class Boss:
             server.player.HP -= 50
             print(server.player.HP)
 
+        if collision.collide(self, server.p_arrow):
+            self.HP -= 20
+            print(self.HP)
 
         # server.boss.remove(self)
         # game_world.remove_object(self)
