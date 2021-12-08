@@ -4,7 +4,7 @@ from Monster import Golem
 import server
 import collision
 
-PIXEL_PER_METER = (30.0 / 1.0)
+PIXEL_PER_METER = (5.0 / 1.0)
 RUN_SPEED_KMPH = 1.0
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
@@ -14,7 +14,7 @@ RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 class arrow:
     image = None
 
-    def __init__(self, x=400, y=300, velocity=10):
+    def __init__(self, x=400, y=300, velocity=0):
 
         if arrow.image == None:
             arrow.image = load_image('Arrow_left.png')

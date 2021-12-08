@@ -11,7 +11,9 @@ logo_time = 0.0
 def enter():
     global image
     image = load_image('start.png')
-
+    bgm=load_music('startsound.mp3')
+    bgm.set_volume(64)
+    bgm.repeat_play()
 
 def exit():
     global image

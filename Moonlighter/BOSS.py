@@ -4,7 +4,9 @@ import game_world
 import random
 import server
 import collision
+from fireball import Fireball
 from BehaviorTree import BehaviorTree, SelectorNode, SequenceNode, LeafNode
+
 
 PIXEL_PER_METER = (10 / 0.3)
 RUN_SPEED_KMPH = 5.0
@@ -31,11 +33,20 @@ class Boss:
         self.HP = 1000
         self.speed = 0
         self.timer = 1.0
+        self.attacktimer = 2.0
         self.wait_timer = 0
+
         self.build_behavior_tree()
 
         self.bossdeath = load_wav('bossdeath.wav')
         self.bossdeath.set_volume(100)
+
+    def fire_ball(self):
+        fireball = Fireball(random.randint(30,1200),random.randint(600,900))
+        game_world.add_object(fireball, 1)
+
+
+
 
 
     def get_bb(self):
@@ -58,15 +69,30 @@ class Boss:
         if collision.collide(self,server.player):
             server.player.HP -= 50
             print(server.player.HP)
-        #
-        # if collision.collide(self, server.p_arrow):
-        #     self.HP -= 20
-        #     self.hitsound.play()
-        #     print(self.HP)
+        self.attacktimer -= game_framework.frame_time
+        if self.HP >= 0:
+            if self.attacktimer <= 0:
+                self.fire_ball()
+                self.fire_ball()
+                self.fire_ball()
+                self.fire_ball()
+                self.fire_ball()
+                self.fire_ball()
+                self.fire_ball()
+                self.fire_ball()
+                self.fire_ball()
+                self.fire_ball()
+                self.fire_ball()
+                self.fire_ball()
+                self.fire_ball()
+                self.fire_ball()
+                self.fire_ball()
+                self.fire_ball()
+                self.fire_ball()
+                self.fire_ball()
 
-        # server.boss.remove(self)
-        # game_world.remove_object(self)
-        # game_framework.change_state(villagestate)
+                self.attacktimer = 2.0
+
 
     def draw(self):
         if self.HP > 0:
@@ -108,6 +134,8 @@ class Boss:
         return BehaviorTree.RUNNING
 
     def find_player(self):
+
+
         if self.HP > 0:
             distance = (server.player.x - self.x) ** 2 + (server.player.y - self.y) ** 2
             if distance < (PIXEL_PER_METER * 10) ** 2:
@@ -119,6 +147,7 @@ class Boss:
             self.distance = 0
 
     def move_to_player(self):
+
         if self.HP > 0:
             self.speed = RUN_SPEED_PPS
             self.dir = math.atan2(server.player.y - self.y, server.player.x - self.x)

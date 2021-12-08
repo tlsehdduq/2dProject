@@ -5,16 +5,17 @@ import os
 from pico2d import *
 
 import collision
-from collision import collide
 import server
 import game_framework
 import game_world
 import villagestate
-import loading
+
 from Moonlighter import Player
 from Bossbackground import BossBackground
 from BOSS import Boss
 from Arrow import arrow
+from portal import Portal
+import lastloading
 
 
 name = "Bossroom"
@@ -26,6 +27,7 @@ def enter():
     server.player = Player()
     server.background = BossBackground()
     server.p_arrow = arrow()
+    server.Door = Portal()
 
     game_world.add_object(server.background, 0)
     game_world.add_object(server.player, 1)
@@ -65,6 +67,11 @@ def update():
     if collision.collide(server.boss,server.p_arrow):
         server.boss.HP -= 20
         print(server.boss.HP)
+
+    if server.boss.HP <= 0:
+        game_world.add_object(server.Door, 1)
+        if collision.collide(server.player,server.Door):
+            game_framework.change_state(lastloading)
 
 
 
