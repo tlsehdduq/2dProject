@@ -20,6 +20,8 @@ class arrow:
             arrow.image = load_image('Arrow_left.png')
 
         self.x, self.y, self.velocity = x, y, velocity
+        self.bosshitsound = load_wav('bosshit.wav')
+        self.bosshitsound.set_volume(32)
 
     def draw(self):
         self.image.draw(self.x, self.y)
@@ -45,6 +47,7 @@ class arrow:
             server.boss.x += 10
             if (server.player.HP < 1000):
                 server.player.HP += 5
+            self.bosshitsound.play()
             game_world.remove_object(self)
             print(server.boss.HP)
 

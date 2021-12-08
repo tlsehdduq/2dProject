@@ -31,6 +31,9 @@ class FlyingGolem:
         self.wait_timer = 0
         self.build_behavior_tree()
 
+        self.golemdeath = load_wav('golemdeath.wav')
+        self.golemdeath.set_volume(100)
+
     def get_bb(self):
         return self.x - 5, self.y - 5, self.x + 5, self.y + 5
 
@@ -45,6 +48,7 @@ class FlyingGolem:
         self.y = clamp(50, self.y, 1024 - 50)
 
         if self.HP <= 0:
+            self.golemdeath.play()
             server.flyinggolem.remove(self)
             game_world.remove_object(self)
 

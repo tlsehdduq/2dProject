@@ -133,6 +133,7 @@ class Runstate:
         Player.x = clamp(150, Player.x, 1100)
         Player.y = clamp(110, Player.y, 600)
 
+
     def draw(Player):
         if Player.velocity == 0 and Player.velocity_y == 0:
             Player.image.clip_draw(int(Player.frame2) * 80, 100, 80, 100, Player.x, Player.y, 50, 50)
@@ -206,6 +207,10 @@ class Player:
         self.parent = 0
         self.font = load_font('ENCR10B.TTF', 16)
 
+        self.walk_sound = load_wav('willstep.wav')
+        self.walk_sound.set_volume(32)
+        self.bow_sound = load_wav('bowsound.wav')
+        self.bow_sound.set_volume(32)
 
     def add_event(self, event):
         self.event_que.insert(0, event)
@@ -217,6 +222,7 @@ class Player:
         Arrow = arrow(self.x, self.y, self.dir_x * 3)
         game_world.add_object(Arrow, 1)
         AttackState.draw(self)
+        self.bow_sound.play()
 
     def update(self):
         self.cur_state.do(self)

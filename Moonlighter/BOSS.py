@@ -34,6 +34,10 @@ class Boss:
         self.wait_timer = 0
         self.build_behavior_tree()
 
+        self.bossdeath = load_wav('bossdeath.wav')
+        self.bossdeath.set_volume(100)
+
+
     def get_bb(self):
         return self.x - 30, self.y - 30, self.x + 30, self.y + 30
 
@@ -46,13 +50,19 @@ class Boss:
         self.y += self.speed * math.sin(self.dir) * game_framework.frame_time
         self.x = clamp(50, self.x, 1280 - 50)
         self.y = clamp(50, self.y, 1024 - 50)
+
+        if self.HP <= 0:
+            self.bossdeath.play()
+
+
         if collision.collide(self,server.player):
             server.player.HP -= 50
             print(server.player.HP)
-
-        if collision.collide(self, server.p_arrow):
-            self.HP -= 20
-            print(self.HP)
+        #
+        # if collision.collide(self, server.p_arrow):
+        #     self.HP -= 20
+        #     self.hitsound.play()
+        #     print(self.HP)
 
         # server.boss.remove(self)
         # game_world.remove_object(self)

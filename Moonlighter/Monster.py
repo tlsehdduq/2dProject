@@ -29,7 +29,11 @@ class Golem:
         self.speed = 0
         self.timer = 1.0
         self.wait_timer = 0
+
         self.build_behavior_tree()
+
+        self.golemdeath = load_wav('golemdeath.wav')
+        self.golemdeath.set_volume(100)
 
     def get_bb(self):
         return self.x - 10, self.y - 10, self.x + 10, self.y + 10
@@ -45,6 +49,7 @@ class Golem:
 
 
         if self.HP <= 0:
+            self.golemdeath.play()
             server.golem.remove(self)
             game_world.remove_object(self)
 

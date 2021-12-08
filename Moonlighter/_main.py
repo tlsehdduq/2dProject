@@ -66,6 +66,7 @@ def update():
         game_object.update()
 
     if collide(server.player, server.Door):
+
         game_framework.change_state(stage2loading)
 
     if server.player.HP <= 0:
@@ -74,6 +75,7 @@ def update():
     for golem in server.golem:
         if collide(golem, server.player):
             print(server.player.HP)
+
 
 
 def draw():
